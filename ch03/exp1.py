@@ -1,14 +1,15 @@
+# coding=UTF-8
 import numpy as np
 
 class CRC:
     def __init__(self,k=25):
-        # temp = np.random.randint(2, size=k)
-        # self.InfoString1 = '0110'
-        # for i in temp:
-        #     self.InfoString1 =  self.InfoString1 + str(i)
-        # self.InfoString1 =  self.InfoString1 + "110"
-        self.InfoString1 = '101001'
-        self.P = 0b1101
+        temp = np.random.randint(2, size=k)
+        self.InfoString1 = '0110'
+        for i in temp:
+            self.InfoString1 =  self.InfoString1 + str(i)
+        self.InfoString1 =  self.InfoString1 + "110"
+        # self.InfoString1 = '101001'
+        self.P = 0b10001000000100001
         self.Plen = len(bin(self.P)[2:])
 
     def cal(self,temp_str):
@@ -36,9 +37,17 @@ class CRC:
         return temp_str + bin(r)[2:]
 
     def rec_cal(self):
-        temp = send_cal()
+        temp = self.send_cal()
+        r = self.cal(temp)
+        print("余数为\t",r)
+        if r==0:
+            print("本次传输没有错误")
+        else:
+            print("本次实验出现错误！")
+
 
 
 
 test = CRC()
 print(test.send_cal())
+test.rec_cal()
