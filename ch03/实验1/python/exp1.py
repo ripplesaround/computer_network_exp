@@ -55,7 +55,8 @@ class CRC:
         else:
             print("本次实验出现错误！")
 
-    def show(self,K=5):
+    def show(self):
+        K = len(self.messages)//3
         for i in range(K):
             self.InfoString1 = self.messages[i*3][-32:]
             print('----------------------------------------------------------')
