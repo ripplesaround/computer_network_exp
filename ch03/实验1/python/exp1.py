@@ -9,7 +9,7 @@ class CRC:
         #     self.InfoString1 =  self.InfoString1 + str(i)
         # self.InfoString1 =  self.InfoString1 + "110"
         # # self.InfoString1 = '01100101001000011001010010100110'
-        f = open('config.txt', 'r')
+        f = open('../config.txt', 'r')
         self.messages = f.read().split('\n')
         self.messages = [message for message in self.messages if message != '']
         self.InfoString1 = ''
