@@ -26,10 +26,15 @@ class bitstuffing:
         return self.FlagString+ans+self.FlagString
 
     def decode(self,temp_str):
+        temp_str = temp_str[8:-8]
         flag = 0
         len_str = len(temp_str)
         ans = ''
+        flag_skip = 0
         for i in range(len_str):
+            if flag_skip:
+                flag_skip = 0
+                continue
             if temp_str[i] == '1':
                 flag += 1
                 ans += '1'
@@ -37,8 +42,7 @@ class bitstuffing:
                 flag = 0
                 ans += '0'
             if flag == 5:
-                i+=1
-                print('hellp')
+                flag_skip = 1
                 flag = 0
         return ans
 
@@ -48,12 +52,12 @@ class bitstuffing:
             print('--------------------------------')
             print("填充第",i,"组数据")
             i+=1
-            print("帧起始标志",self.FlagString)
-            print("帧数据信息",temp_str)
-            print("帧结束标志",self.FlagString)
+            print("帧起始标志\t\t\t",self.FlagString)
+            print("帧数据信息\t\t\t",temp_str)
+            print("帧结束标志\t\t\t",self.FlagString)
             temp = self.stuffing(temp_str)
-            print("比特填充后的发送帧",temp)
-            print("比特删除后的发送帧",self.decode(temp))
+            print("比特填充后的发送帧\t\t",temp)
+            print("比特删除后的发送帧\t\t",self.decode(temp))
 
 
 test = bitstuffing()
