@@ -9,7 +9,6 @@ desc:
 '''
 
 import serial
-
 import serial.tools.list_ports
 
 port_list = list(serial.tools.list_ports.comports())
@@ -28,13 +27,15 @@ try:
     bps = 9600
     timex = None
     # 打开串口，并得到串口对象
-    ser = serial.Serial(portx, bps, timeout=timex,stopbits=1,parity=0,bytesize=8)
+    ser = serial.Serial(portx, bps, timeout=timex,parity=serial.PARITY_EVEN,stopbits=1,bytesize=8)
+    print(ser.parity)
     print("串口详情参数：", ser)
     # # 十六进制的发送
     # result = ser.write(chr(0x06).encode("utf-8")) # 写数据
     # print("写总字节数：", result)
     # 十六进制的读取
-    print(ser.read(11))  # 读一个字节
+    result = ser.readline().strip(b'\n')
+    print(result)
     print("----------")
     ser.close()  # 关闭串口
 
