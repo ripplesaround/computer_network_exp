@@ -32,7 +32,7 @@ try:
     #        其他：等待超时时间（单位为秒）
     timex = 5
     # 打开串口，并得到串口对象
-    ser = serial.Serial(portx, bps, timeout=timex)
+    ser = serial.Serial(portx, bps, timeout=timex,stopbits=1,parity=0,bytesize=8)
 
     # 写数据
     result = ser.write("HELLO WORLD".encode("gbk"))
