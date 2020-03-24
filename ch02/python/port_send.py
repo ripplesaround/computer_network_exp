@@ -5,7 +5,7 @@ Author: ripples
 Email: ripplesaround@sina.com
 
 date: 2020/3/24 11:36
-desc:
+desc: 配合port_rec使用
 '''
 
 import serial
