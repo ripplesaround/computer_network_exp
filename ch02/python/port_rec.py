@@ -28,15 +28,18 @@ try:
     timex = None
     # 打开串口，并得到串口对象
     ser = serial.Serial(portx, bps, timeout=timex,parity=serial.PARITY_EVEN,stopbits=1,bytesize=8)
-    print(ser.parity)
-    print("串口详情参数：", ser)
-    # # 十六进制的发送
-    # result = ser.write(chr(0x06).encode("utf-8")) # 写数据
-    # print("写总字节数：", result)
+    print("串口属性")
+    print("串口名称\t", ser.name)
+    print("字节大小\t", ser.bytesize)
+    print("设置波特率\t", ser.baudrate)
+    print("奇偶校验\t", ser.parity)
+    print("设置停止位\t", ser.stopbits)
+    print("超时设置\t", ser.timeout)
+    print("------------------")
     # 十六进制的读取
     result = ser.readline().strip(b'\n')
-    print(result)
-    print("----------")
+    print('收到的数据：\t',str(result, encoding = "gbk")  )
+    print("------------------")
     ser.close()  # 关闭串口
 
 except Exception as e:
