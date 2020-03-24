@@ -38,7 +38,7 @@ try:
     print("------------------")
     # 十六进制的读取
     result = ser.readline().strip(b'\n')
-    print('收到的数据：\t',str(result, encoding = "gbk")  )
+    print('收到的数据：\t',str(result, encoding = "gbk"))
     print("------------------")
     ser.close()  # 关闭串口
 
