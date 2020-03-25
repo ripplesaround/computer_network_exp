@@ -15,13 +15,14 @@ import sys
 sys.path.append('../实验1/python')
 from CRC import *
 import time
+import numpy as np
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 UDPPort=8888
 server.bind(('127.0.0.1',UDPPort))
 test = CRC()
-
-
+FilterError=10
+FilterLost=10
 
 from_client = server.recvfrom(1024)
 print(f"来自{from_client[1]}的消息：{from_client[0].decode('utf-8')}")
@@ -39,7 +40,7 @@ while 1:
     seq = int(from_client_data[0].decode('utf-8')[0])
     mess = from_client_data[0].decode('utf-8')[1:]
     # 帧出错
-    if test1 == 2:
+    if np.random.randint(0,FilterError)<1:
         s1 = list(mess)
         s1[10] = str((int(s1[10])+1)%2)
         mess = ''.join(s1)
@@ -61,7 +62,7 @@ while 1:
     ack = 1-frame_expected
 
     se = str(ack).encode('utf-8')  # 其实可以没有内容
-    if test1 != 0 and test1!= 6:
+    if np.random.randint(0,FilterLost)>0:
         server.sendto(se, from_client_data[1])  # 可以直接实现阻塞的功能
         # print("send ack_pack")
     # server.sendto(se, from_client_data[1])
