@@ -68,8 +68,11 @@ while 1:
     seq = next_frame_to_send
     se = str(seq)+ test.send_cal(messages[already_send])
     se = se.encode('utf-8')
-    client.sendto(se, ('127.0.0.1', UDPPort))
-    print('已经发送第', already_send, "条数据")
+    if np.random.randint(0, FilterLost) > 0:
+        client.sendto(se, ('127.0.0.1', UDPPort))
+        print('已经发送第', already_send, "条数据")
+    else:
+        print('未发送第', already_send, "条数据")
 
     # done 计时器
 
