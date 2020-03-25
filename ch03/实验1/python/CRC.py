@@ -49,7 +49,8 @@ class CRC:
         if r==0:
             return temp[:32]
         else:
-            print("本次实验出现错误！")
+            print("余数不为0")
+            return 'error'
 
 
     def rec_cal_show(self,i,messages):

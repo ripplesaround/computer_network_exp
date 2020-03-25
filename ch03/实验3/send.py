@@ -43,6 +43,7 @@ class rec_ack:
     def run(self,n):
         global flag_ack
         flag_ack = False
+        global re
         while self._running :
             re = client.recvfrom(1024)
             if re[0].decode('utf-8')!=None:
@@ -58,10 +59,13 @@ re = ''
 flag_re = False
 print("开始发送")
 print("----------------------------------------")
+
+next_frame_to_send = 0
+
 while 1:
     # todo 序号需要修改
     # seq放在第一位
-    seq = 0
+    seq = next_frame_to_send
     se = str(seq)+ test.send_cal(messages[already_send])
     se = se.encode('utf-8')
     client.sendto(se, ('127.0.0.1', UDPPort))
@@ -72,12 +76,11 @@ while 1:
     c = rec_ack()
     t = threading.Thread(target=c.run, args=(10,))
     t.start()
-    # time.sleep(2)
     current_time = time.time()
     while(1):
         now = time.time()
         if flag_ack:
-            print("接收ack")
+            # print("接收ack")
             break
         if now - current_time > 2:
             print("time out")
@@ -88,11 +91,19 @@ while 1:
     t.join()
     if flag_re :
         flag_re = False
-        print('重新发送第', already_send, "条数据")
+        print('重新发送第', already_send, "条数据，原因：帧丢失")
         continue
-    print('成功发送第', already_send, "条数据")
-    print("----------------")
-    already_send += 1
+    ack = int(re[0].decode('utf-8'))
+    if ack == next_frame_to_send:
+        print('成功发送第', already_send, "条数据")
+        next_frame_to_send += 1
+        next_frame_to_send %= 2
+        print("----------------")
+        already_send += 1
+    else:
+        print('重新发送第', already_send, "条数据，原因：帧出错")
+        continue
+
     if finish == already_send:
         client.sendto('stop'.encode('utf-8'), ('127.0.0.1', UDPPort))
         break
