@@ -21,12 +21,12 @@ FilterError=10
 FilterLost=10
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
 f = open('config.txt', 'r')
 messages = f.read().split('\n')
 messages = [message for message in messages if message != '']
 test = CRC()
-print("开始发送")
-print("----------------------------------------")
+
 
 already_send = 0
 finish = len(messages)
@@ -36,21 +36,28 @@ flag_ack = False
 class rec_ack:
     def __init__(self):
         self._running = True
-        flag_ack = False
 
     def terminate(self):
         self._running = False
 
     def run(self,n):
+        global flag_ack
+        flag_ack = False
         while self._running :
             re = client.recvfrom(1024)
             if re[0].decode('utf-8')!=None:
                 flag_ack = True
                 break
 
-
-
-
+se = 'start'.encode('utf-8')
+client.sendto(se, ('127.0.0.1', UDPPort))
+re = client.recvfrom(1024)
+print(f"来自{re[1]}的消息:{re[0].decode('utf-8')}")
+selfport = int(re[0].decode('utf-8'))
+re = ''
+flag_re = False
+print("开始发送")
+print("----------------------------------------")
 while 1:
     # todo 序号需要修改
     # seq放在第一位
@@ -58,21 +65,33 @@ while 1:
     se = str(seq)+ test.send_cal(messages[already_send])
     se = se.encode('utf-8')
     client.sendto(se, ('127.0.0.1', UDPPort))
+    print('已经发送第', already_send, "条数据")
 
-    # todo 计时器
+    # done 计时器
 
-    # t1 = threading.Thread(target=print_time, args=("Thread-1", 2,),daemon=False)
-    # t1.start()
-    # client.recvfrom(1024)
     c = rec_ack()
     t = threading.Thread(target=c.run, args=(10,))
     t.start()
-    time.sleep(2)
+    # time.sleep(2)
+    current_time = time.time()
+    while(1):
+        now = time.time()
+        if flag_ack:
+            print("接收ack")
+            break
+        if now - current_time > 2:
+            print("time out")
+            client.sendto('timeout'.encode('utf-8'), ('127.0.0.1',selfport))
+            flag_re = True
+            break
     c.terminate()
-    print(flag_ack)
     t.join()
-
+    if flag_re :
+        flag_re = False
+        print('重新发送第', already_send, "条数据")
+        continue
     print('成功发送第', already_send, "条数据")
+    print("----------------")
     already_send += 1
     if finish == already_send:
         client.sendto('stop'.encode('utf-8'), ('127.0.0.1', UDPPort))
