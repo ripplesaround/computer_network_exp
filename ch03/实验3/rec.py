@@ -32,7 +32,7 @@ while 1:
     print(f"来自{from_client_data[1]}的消息：{re}，seq为{seq}")
     se = 'ack'.encode('utf-8')  # 其实可以没有内容
 
-    time.sleep(3)
+    # time.sleep(1)
     server.sendto(se, from_client_data[1])  # 可以直接实现阻塞的功能
 
 print("----------------------------------------")

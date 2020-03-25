@@ -30,21 +30,26 @@ print("----------------------------------------")
 
 already_send = 0
 finish = len(messages)
+re = ''
+flag_ack = False
 
-def print_time(threadName, delay):
-   start_time = time.time()
-   flag = True
-   while flag:
-       now = time.time()
-       if now-start_time>2:
-           flag = False
+class rec_ack:
+    def __init__(self):
+        self._running = True
+        flag_ack = False
 
-   print("time out")
+    def terminate(self):
+        self._running = False
 
-def rec_ack(threadName, size):
-    client.recvfrom(size)
-    print('成功发送第', already_send, "条数据")
-    already_send += 1
+    def run(self,n):
+        while self._running :
+            re = client.recvfrom(1024)
+            if re[0].decode('utf-8')!=None:
+                flag_ack = True
+                break
+
+
+
 
 while 1:
     # todo 序号需要修改
@@ -56,13 +61,19 @@ while 1:
 
     # todo 计时器
 
-    t1 = threading.Thread(target=print_time, args=("Thread-1", 2,),daemon=False)
-    # t2 = threading.Thread(target=rec_ack,args= ("Thread-2", 1024),daemon=True)
-    t1.start()
-    client.recvfrom(1024)
+    # t1 = threading.Thread(target=print_time, args=("Thread-1", 2,),daemon=False)
+    # t1.start()
+    # client.recvfrom(1024)
+    c = rec_ack()
+    t = threading.Thread(target=c.run, args=(10,))
+    t.start()
+    time.sleep(2)
+    c.terminate()
+    print(flag_ack)
+    t.join()
+
     print('成功发送第', already_send, "条数据")
     already_send += 1
-
     if finish == already_send:
         client.sendto('stop'.encode('utf-8'), ('127.0.0.1', UDPPort))
         break
