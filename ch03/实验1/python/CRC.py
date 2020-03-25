@@ -9,7 +9,7 @@ desc: 真实的用rec_cal 展示用rec_cal_show
 import numpy as np
 import copy
 class CRC:
-    def __init__(self,k=25):
+    def __init__(self):
         self.InfoString1 = ''
         self.P = 0b10001000000100001
         self.crc = ''
@@ -28,7 +28,9 @@ class CRC:
                 temp = bin(r)[2:] + temp_str[self.Plen+i]
         return r
 
-    def send_cal(self):
+    def send_cal(self,temp = None):
+        if temp!=None:
+            self.InfoString1 = temp
         len_infostr_orgin = len(self.InfoString1)
         temp_str = self.InfoString1
         for i in range(self.Plen - 1):
@@ -43,14 +45,12 @@ class CRC:
 
     def rec_cal(self,temp):
         # temp = self.send_cal()
-        print("接收端收到的发送帧为\t\t\t",temp)
-        print("接收数据为\t\t\t\t\t",temp[:32])
         r = self.cal(temp)
-        print("余数为\t\t\t\t\t\t",bin(r)[2:])
         if r==0:
-            print("本次传输没有错误")
+            return temp[:32]
         else:
             print("本次实验出现错误！")
+
 
     def rec_cal_show(self,i,messages):
         # temp = self.send_cal()
@@ -63,7 +63,6 @@ class CRC:
             print("本次传输没有错误")
         else:
             print("本次实验出现错误！")
-        return temp[:32]
 
     def show(self,messages):
         K = len(messages)//3
@@ -77,8 +76,3 @@ class CRC:
             print("发送端循环冗余校验码为\t\t", self.crc)
             test.rec_cal_show(i,messages)
 
-f = open('../config.txt', 'r')
-messages = f.read().split('\n')
-messages = [message for message in messages if message != '']
-test = CRC()
-test.show(messages)
