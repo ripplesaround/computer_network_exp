@@ -18,7 +18,6 @@ UDPPort=8888
 FilterError=10
 FilterLost=10
 
-
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 print("开始发送")
