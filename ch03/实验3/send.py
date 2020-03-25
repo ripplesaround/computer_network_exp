@@ -100,6 +100,7 @@ while 1:
     ack = int(re[0].decode('utf-8'))
     if ack == next_frame_to_send:
         print('成功发送第', already_send, "条数据")
+        print(f"接收到确认帧，发送回确认帧的ack为{ack}")
         next_frame_to_send += 1
         next_frame_to_send %= 2
         print("----------------")

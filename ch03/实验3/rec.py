@@ -50,8 +50,10 @@ while 1:
         ack = (seq+1)%2
         se = str(ack).encode('utf-8')
         server.sendto(se, from_client_data[1])
+        print(f"确认帧的序号{ack}")
         test1 += 1
         print("此次传输中帧损坏")
+        print('----------------')
         continue
     print(f"来自{from_client_data[1]}的消息：{re}，seq为{seq}")
 
@@ -64,7 +66,8 @@ while 1:
     se = str(ack).encode('utf-8')  # 其实可以没有内容
     if np.random.randint(0,FilterLost)>0:
         server.sendto(se, from_client_data[1])  # 可以直接实现阻塞的功能
-        # print("send ack_pack")
+        print(f"确认帧的序号{ack}")
+        print('----------------')
     # server.sendto(se, from_client_data[1])
     test1 += 1
 
