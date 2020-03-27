@@ -28,7 +28,7 @@ from_client = server.recvfrom(1024)
 print(f"来自{from_client[1]}的消息：{from_client[0].decode('utf-8')}")
 server.sendto(str(from_client[1][1]).encode('utf-8'),from_client[1])
 
-test1 = 0
+test1 = 0           # 模拟传输错误
 print("开始接收")
 print("----------------------------------------")
 

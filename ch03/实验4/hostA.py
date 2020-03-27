@@ -22,6 +22,11 @@ FilterError=10
 FilterLost=10
 
 MAX_SEQ = 3
+def between(a,b,c):
+    if(a<=b and b<c) or (c<a and a<=b) or (b<c and c<a):
+        return True
+    else:
+        return False
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -64,6 +69,10 @@ print("开始发送")
 print("----------------------------------------")
 
 next_frame_to_send = 0
+ack_expend = 0
+frame_expected = 0
+nbuffered = 0
+seq_nr_i = 0
 
 while 1:
     # todo 序号需要修改
