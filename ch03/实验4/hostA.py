@@ -21,6 +21,8 @@ UDPPort=8888
 FilterError=10
 FilterLost=10
 
+MAX_SEQ = 3
+
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 f = open('config.txt', 'r')

@@ -64,7 +64,7 @@ print("----------------------------------------")
 next_frame_to_send = 0
 
 while 1:
-    # todo 序号需要修改
+    # done 序号需要修改
     # seq放在第一位
     seq = next_frame_to_send
     se = str(seq)+ test.send_cal(messages[already_send])
