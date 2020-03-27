@@ -75,5 +75,4 @@ class CRC:
             print('CRC为\t\t\t\t\t\t',bin(self.P)[2:])
             print("带校验和的发送帧为\t\t\t",self.send_cal())
             print("发送端循环冗余校验码为\t\t", self.crc)
-            test.rec_cal_show(i,messages)
 
