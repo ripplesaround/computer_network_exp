@@ -12,19 +12,19 @@
 
 ##### 实验一
 
-- [ ] java
+- [x] java
 - [x] python
 - [ ] c/c++
 
 ##### 实验二
 
-- [ ] java
+- [x] java
 - [ ] python
 - [ ] c/c++
 
 ##### 实验三
 
-- [ ] java
+- [x] java
 - [x] python
 - [ ] c/c++
 
@@ -37,5 +37,5 @@
 ##### 实验五
 
 - [ ] java
-- [ ] python
+- [x] python
 - [ ] c/c++
