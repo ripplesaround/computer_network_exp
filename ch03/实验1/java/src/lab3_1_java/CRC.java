@@ -1,70 +1,60 @@
 package lab3_1_java;
 
+import java.math.BigInteger;
+
 public class CRC {
 
-	public static long getbi(String linestr) {//将二进制字符串转为long
+	public static BigInteger getbi(String linestr) {//将二进制字符串转为biginteger
 		String bs = linestr.substring(linestr.indexOf("=") + 1);
-		long ib = sbtoi(bs);
+		BigInteger ib = new BigInteger(bs, 2);
 		return ib;
 	}
 	
-	public static long sbtoi(String bs) {
-		long total = 0;
-		char[] ba = bs.toCharArray();
-		for(int i = 0; i < ba.length; i++) {
-			total = total + ba[i] - 48;
-			if(i != ba.length - 1) {
-				total = total << 1;
-			}
-		}
-		return total;
-	}
-	
-	public static long CRCcal(long info1, long genx) {//返回余数
-		info1 = info1 << longlen(genx, 2) - 1;
-		long rem = mod2div_rem(info1, genx);
+	public static BigInteger CRCcal(BigInteger info1, BigInteger genx) {//返回余数
+		info1 = info1.shiftLeft(BigIntegerlen(genx, new BigInteger("2")) - 1);
+		BigInteger rem = mod2div_rem(info1, genx);
 		return rem;
 	}
 	
-	public static long Sendcal(long info1, long genx) {//返回发送帧
-		info1 = info1 << longlen(genx, 2) - 1;
-		long rem = mod2div_rem(info1, genx);
-		return info1 + rem;
+	public static BigInteger Sendcal(BigInteger info1, BigInteger genx) {//返回发送帧
+		info1 = info1.shiftLeft(BigIntegerlen(genx, new BigInteger("2")) - 1);
+		BigInteger rem = mod2div_rem(info1, genx);
+		return info1.add(rem);
 	}
 	
-	public static boolean CRCver(long recv, long genx) {//CRC校验
-		return (mod2div_rem(recv, genx) == 0);
+	public static boolean CRCver(BigInteger rece, BigInteger genx) {//检验余数
+		return (mod2div_rem(rece, genx).compareTo(new BigInteger("0")) == 0);
 	}
 	
-	public static long mod2div_rem(long a, long b) {//模2除法生成余数
-		int lena = longlen(a,2);
-		int lenb = longlen(b,2);
-		long d = 0;
-		long e = 0;
+	public static BigInteger mod2div_rem(BigInteger a, BigInteger b) {//模2除法生成余数
+		int lena = BigIntegerlen(a, new BigInteger("2"));
+		int lenb = BigIntegerlen(b, new BigInteger("2"));
+		BigInteger d = new BigInteger("0");
+		BigInteger e = new BigInteger("0");
 		for(int i = lena; i > 0; i--) {
-			long c = getIndex(a, i); 
-			d = (d << 1) + c;
-			e = e << 1;
-			if(longlen(d, 2) == lenb) {
-				e = e + 1;
-				d = d ^ b;
+			BigInteger c = getIndex(a, i); 
+			d = d.shiftLeft(1).add(c);
+			e = e.shiftLeft(1);
+			if(BigIntegerlen(d, new BigInteger("2")) == lenb) {
+				e = e.add(new BigInteger("1"));
+				d = d.xor(b);
 			}
 		}
 		return d;
 	}
 	
-	public static int longlen(long num,int radix) {//获取位数
-		for(int i = 0; i < 64; i++) {
-			long c = (long) Math.pow(radix, i);
-			if(num % c == num) {
+	public static int BigIntegerlen(BigInteger num,BigInteger radix) {//获取位数
+		BigInteger c = new BigInteger("1");
+		for(int i = 1; true; i++) {
+			c = c.multiply(radix);
+			if(c.compareTo(num) == 1) {
 				return i;
 			}
 		}
-		return 0;
 	}
 	
-	private static long getIndex(long a,int index) {
-		return a >> (index - 1) & 1;
+	private static BigInteger getIndex(BigInteger a,int index) {
+		return a.shiftRight(index-1).and(new BigInteger("1"));
 	}
 	
 }
