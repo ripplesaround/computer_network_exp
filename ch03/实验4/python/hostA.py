@@ -103,7 +103,13 @@ while 1:
     wait_for_event()
 
     if flag_control == 1:
-        pass
+        print("发送一帧")
+        from_network_layer()
+        into_buffer += 1
+        nbuffered += 1
+        send()
+        next_frame_to_send += 1
+        next_frame_to_send %= MAX_SEQ
     elif flag_control == 2:
         print("收到一帧")
         # 将json转换成frame
@@ -115,10 +121,23 @@ while 1:
             to_network_layer()
             frame_expected += 1
             frame_expected %= MAX_SEQ
-
         while(between(ack_expend,s.ack,next_frame_to_send)):
             nbuffered -= 1
-            # stop_time
+            # todo stop_time
             ack_expend += 1
             ack_expend %= MAX_SEQ
+    elif flag_control == 3:
+        print("check sum error")
+    elif flag_control == 4:
+        print("time out")
+        next_frame_to_send = ack_expend
+        for i in range(nbuffered):
+            send()
+            next_frame_to_send += 1
+            next_frame_to_send %= MAX_SEQ
+
+    if nbuffered < MAX_SEQ:
+        enable_network_layer()
+    else:
+        disable_network_layer()
 
