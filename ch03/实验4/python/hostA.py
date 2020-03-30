@@ -4,9 +4,10 @@
 Author: ripples
 Email: ripplesaround@sina.com
 
-date: 2020/3/25 15:01
+date: 2020/3/31 2:30
 desc:
 '''
+
 # 发送端
 import socket
 import sys
@@ -17,10 +18,15 @@ import time
 import _thread
 import threading
 import math
+import json
 
-UDPPort=8888
+HostAPort = 8888
+HostBPort = 9999
 FilterError=10
 FilterLost=10
+
+selfPort = HostAPort
+tarPort = HostBPort
 
 MAX_SEQ = 7
 Len = 3 # ack,seq编码长度 [log7+1]
@@ -31,69 +37,17 @@ def between(a,b,c):
     else:
         return False
 
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-client.bind(('127.0.0.1',UDPPort))
+host = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+host.bind(('127.0.0.1',selfPort))
 
-f = open('config.txt', 'r')
-messages = f.read().split('\n')
-messages = [message for message in messages if message != '']
+class frame:
+    def __init__(self,a='',b=0,c=0):
+        self.info = a
+        self.seq = b
+        self.ack = c
+def dict2frame(d):
+    return frame(d['info'],d['seq'],d['ack'])
 
-# CRC类声明
-test = CRC()
-
-
-already_send = 0
-finish = len(messages)
-re = ''
-flag_ack = False
-
-class rec_ack:
-    def __init__(self):
-        self._running = True
-
-    def terminate(self):
-        self._running = False
-
-    def run(self,n):
-        global flag_control
-        global re
-        while self._running :
-            re = client.recvfrom(1024)
-            if re[0].decode('utf-8')!=None:
-                print('接收到一个包！！！')
-                flag_control = 2
-
-                if re[0].decode('utf-8') == 'timeout':
-                    flag_control = 4
-                    break
-
-                # todo 接收停止
-
-                mess = re[0].decode('utf-8')[6:]
-                crc_test = test.rec_cal(mess)
-                if crc_test == 'error':
-                    # crc校验未通过
-                    flag_control = 3
-
-                break
-
-# 多个计时器
-time_tabale = []
-
-# se = 'start'.encode('utf-8')
-# client.sendto(se, ('127.0.0.1', UDPPort))
-# re = client.recvfrom(1024)
-# print(f"来自{re[1]}的消息:{re[0].decode('utf-8')}")
-# selfport = int(re[0].decode('utf-8'))
-selfport = UDPPort
-re = ''
-flag_re = False
-print("开始发送")
-print("----------------------------------------")
-
-# todo 双工
-# todo 稍带确认
-# todo 计时器链表
 
 next_frame_to_send = 0
 ack_expend = 0
@@ -101,56 +55,12 @@ frame_expected = 0
 nbuffered = 0
 seq_nr_i = 0
 
-flag_control = 0        #相当于switch case
-# 0-不准许发送 1-发送 2-收到帧 3-cksum_error 4-timeout
 
-def wait_for_event():
-    global flag_control
-    c = rec_ack()
-    t = threading.Thread(target=c.run, args=(10,))
-    t.start()
-    current_time = time.time()
-    # 实际上每次只用检测time_table的第一个元素
-    # todo 还有有一位判断，防止没有及时处理timeout而重叠
-    temp = time_tabale[0]
-    if current_time - temp[0] > 3:
-        client.sendto('timeout'.encode('utf-8'), ('127.0.0.1', selfport))
-    c.terminate()
-    t.join()
 
-def int2bin(num):
-    ans = bin(num)[2:]
-    while len(ans)<Len:
-        ans = '0'+ans
-    return ans
-
-def send():
-    seq = int2bin(next_frame_to_send)
-    ack = int2bin((frame_expected+MAX_SEQ)%(MAX_SEQ+1))
-    se = seq + ack + test.send_cal(messages[already_send])
-    se = se.encode('utf-8')
-    if np.random.randint(0, FilterLost) > 0:
-        client.sendto(se, ('127.0.0.1', UDPPort))
-        current_time = time.time()
-        time_tabale.append((current_time,(frame_expected+MAX_SEQ)%(MAX_SEQ+1)))
-        print('已经发送第', already_send, "条数据")
-    else:
-        print('未发送第', already_send, "条数据")
-
+print("开始传送")
+print("---------------------------------")
 while 1:
-    wait_for_event()
-
-    if flag_control == 1:
-        print('发送一帧')
-        send()
-    elif flag_control ==2:
-        print('接收到一帧')
-        print(f"来自{re[1]}的消息:{re[0].decode('utf-8')}")
-    elif flag_control == 3:
-        print("check sum error")
-    elif flag_control == 4:
-        print('time out')
-    flag = 0
-
-print("----------------------------------------")
-print("发送结束")
+    re = host.recvfrom(1024)
+    json_str = re[0].decode('utf-8')
+    s = json.loads(json_str,object_hook=dict2frame)
+    print(f"来自{re[1]}的消息：{s.seq}")
