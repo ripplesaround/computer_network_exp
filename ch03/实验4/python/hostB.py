@@ -18,6 +18,7 @@ import threading
 import math
 import json
 
+# done 捎带确认
 
 HostAPort = 8888
 HostBPort = 9999
@@ -115,8 +116,7 @@ def wait_for_event():
 
 enable_network_layer()
 already_send = 0
-a = 0
-# for a in range(60):
+
 while 1:
     wait_for_event()
     if flag_control ==1:
@@ -145,6 +145,10 @@ while 1:
         # 将json转换成frame
         json_str = re[0].decode('utf-8')
         s = json.loads(json_str, object_hook=dict2frame)
+        s.info = test.rec_cal(s.info)
+        if s.info == 'error':
+            print("crc校验未通过")
+            continue
         print(f"来自{re[1]}的消息：{s.info},s.seq:{s.seq},s.ack:{s.ack}")
         re = ''
 
@@ -187,7 +191,6 @@ while 1:
     else:
         disable_network_layer()
     print("-------------------")
-    print(a)
 print("end")
 print("into_buffer",into_buffer)
 print(len(messages))
