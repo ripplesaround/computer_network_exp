@@ -61,6 +61,9 @@ class frame:
         self.info = a
         self.seq = b
         self.ack = c
+def dict2frame(d):
+    return frame(d['info'],d['seq'],d['ack'])
+
 
 def send():
     s = frame(test.send_cal(buffer[next_frame_to_send]),next_frame_to_send,frame_expected)
@@ -82,17 +85,24 @@ def from_network_layer():
     # 从message中取数组，模拟从网络层取包
     buffer[next_frame_to_send] = messages[into_buffer]
 
-
+k = host.sendto('start'.encode('utf-8'), ('127.0.0.1', tarPort))
 print("开始传送")
 print("---------------------------------")
 def to_network_layer():
     pass
 
-def wait_for_event():
+def rec(arg):
     global re
     global flag_control
     re = host.recvfrom(1024)
     flag_control = 2
+
+def wait_for_event():
+    t1 = threading.Thread(target=rec, args=(3,))
+    t1.start()
+    t1.join(0.01)
+    print("flag_control",flag_control)
+
 
 enable_network_layer()
 

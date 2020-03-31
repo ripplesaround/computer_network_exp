@@ -85,17 +85,27 @@ def from_network_layer():
     # 从message中取数组，模拟从网络层取包
     buffer[next_frame_to_send] = messages[into_buffer]
 
+k = host.recvfrom(1024)
 print("开始传送")
 print("---------------------------------")
 
 def to_network_layer():
     pass
 
-def wait_for_event():
+def rec(arg):
     global re
     global flag_control
     re = host.recvfrom(1024)
     flag_control = 2
+
+
+
+def wait_for_event():
+    t1 = threading.Thread(target=rec, args=(3,))
+    t1.start()
+    t1.join(0.01)
+    print("flag_control",flag_control)
+
 
 enable_network_layer()
 
