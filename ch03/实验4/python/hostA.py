@@ -19,6 +19,7 @@ import _thread
 import threading
 import math
 import json
+import numpy as np
 
 HostAPort = 8888
 HostBPort = 9999
@@ -97,6 +98,7 @@ print("开始传送")
 print("---------------------------------")
 
 def to_network_layer():
+    print("传输至网络层")
     pass
 
 def rec(arg):
@@ -122,18 +124,21 @@ def wait_for_event():
             now = time.time()
             if now - time_table[0][0]>3:
                 orgin = 4
-                print(now,time_table)
+                # print(now,time_table)
         t1.join(0.00001)
-        print("此时未接收到frame")
+        # print("此时未接收到frame")
         flag_control = orgin
-    print("flag_control",flag_control)
+    # if flag_control != 0:
+    #     print("flag_control",flag_control)
 
+flag_rej = False
 
 enable_network_layer()
 already_send = 0
-
+a = 0
 while 1:
     wait_for_event()
+    a+=1
     if flag_control == 1:
         print("发送一帧")
         if into_buffer == len(messages):
@@ -160,14 +165,26 @@ while 1:
         # 将json转换成frame
         json_str = re[0].decode('utf-8')
         s = json.loads(json_str, object_hook=dict2frame)
+
+        # 模拟传输出错
+        if np.random.randint(0, FilterError) <1:
+        # if a == 10:
+            s1 = list(s.info)
+            s1[10] = str((int(s1[10]) + 1) % 2)
+            s.info = ''.join(s1)
+            print("     传输损坏")
+
         s.info = test.rec_cal(s.info)
         if s.info == 'error':
-            print("crc校验未通过")
+            flag_rej = True
+            print(f"对方的第{s.seq}帧的crc校验未通过")
+            print("-------------------")
             continue
         print(f"来自{re[1]}的消息：{s.info},s.seq:{s.seq},s.ack:{s.ack}")
         re = ''
 
         if(s.seq == frame_expected):
+            flag_rej = False
             to_network_layer()
             if (frame_expected < MAX_SEQ):
                 frame_expected += 1
@@ -175,6 +192,12 @@ while 1:
                 frame_expected = 0
             # frame_expected += 1
             # frame_expected %= MAX_SEQ
+
+
+        # if flag_rej:
+        #     print("拒收")
+        #     continue
+
         while(between(ack_expend,s.ack,next_frame_to_send)):
             nbuffered -= 1
             # todo stop_time

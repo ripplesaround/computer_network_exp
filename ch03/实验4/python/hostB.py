@@ -17,6 +17,7 @@ import _thread
 import threading
 import math
 import json
+import numpy as np
 
 # done 捎带确认
 
@@ -68,8 +69,12 @@ def dict2frame(d):
 
 def send():
     s = frame(test.send_cal(buffer[next_frame_to_send]),next_frame_to_send,(frame_expected+MAX_SEQ)%(MAX_SEQ+1))
-    host.sendto(json.dumps(obj=s.__dict__, ensure_ascii=False).encode('utf-8'), ('127.0.0.1', tarPort))
-
+    模拟传输丢失
+    if np.random.randint(0, FilterLost) > 0:
+        host.sendto(json.dumps(obj=s.__dict__, ensure_ascii=False).encode('utf-8'), ('127.0.0.1', tarPort))
+    else:
+        print("     传输丢失")
+    # host.sendto(json.dumps(obj=s.__dict__, ensure_ascii=False).encode('utf-8'), ('127.0.0.1', tarPort))
     # start_timer
     time_table.append([time.time(), next_frame_to_send])
 
@@ -107,6 +112,8 @@ def wait_for_event():
     global re
     global flag_control
     orgin = flag_control
+    if flag_control == 2 or flag_control == 3 or flag_control == 4:
+        orgin = 0
     re = ''
     t1 = threading.Thread(target=rec, args=(3,))
     t1.start()
@@ -117,11 +124,11 @@ def wait_for_event():
             now = time.time()
             if now - time_table[0][0]>3:
                 orgin = 4
-                print(now, time_table)
+                # print(now, time_table)
         t1.join(0.00001)
-        print("此时未接收到frame")
+        # print("此时未接收到frame")
         flag_control = orgin
-    print("flag_control",flag_control)
+    # print("flag_control",flag_control)
 
 
 enable_network_layer()
