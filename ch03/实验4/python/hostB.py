@@ -70,7 +70,12 @@ def send():
     s = frame(test.send_cal(buffer[next_frame_to_send]),next_frame_to_send,(frame_expected+MAX_SEQ)%(MAX_SEQ+1))
     host.sendto(json.dumps(obj=s.__dict__, ensure_ascii=False).encode('utf-8'), ('127.0.0.1', tarPort))
 
+    # start_timer
+    time_table.append([time.time(), next_frame_to_send])
+
 flag_control = 0
+time_table = []
+
 def enable_network_layer():
     global flag_control
     flag_control = 1
@@ -108,6 +113,11 @@ def wait_for_event():
     t1.join(0.01)
     if re == '':
         host.sendto('run'.encode('utf-8'), ('127.0.0.1', selfPort))
+        if len(time_table)>0:
+            now = time.time()
+            if now - time_table[0][0]>3:
+                orgin = 4
+                print(now, time_table)
         t1.join(0.00001)
         print("此时未接收到frame")
         flag_control = orgin
@@ -116,6 +126,8 @@ def wait_for_event():
 
 enable_network_layer()
 already_send = 0
+
+re_error = -1    #记录需要重传的帧的序号
 
 while 1:
     wait_for_event()
@@ -152,6 +164,7 @@ while 1:
         print(f"来自{re[1]}的消息：{s.info},s.seq:{s.seq},s.ack:{s.ack}")
         re = ''
 
+        # 自动可以保证按序接收，不要的直接丢弃，相当于接收窗口未移动
         if (s.seq == frame_expected):
             to_network_layer()
             # frame_expected += 1
@@ -165,6 +178,10 @@ while 1:
             nbuffered -= 1
             # todo stop_time
             print(f"确认第{ack_expend}帧已送达")
+
+            # 按照顺序送达，所以根据有序性，直接按照顺序pop
+            time_table.pop(0)
+
             already_send +=1
             # ack_expend += 1
             # ack_expend %= MAX_SEQ
@@ -177,10 +194,13 @@ while 1:
     elif flag_control == 4:
         print("time out")
         next_frame_to_send = ack_expend
+        time_table = []  # 洗掉time_table
+
         for i in range(nbuffered):
             send()
             # next_frame_to_send += 1
             # next_frame_to_send %= MAX_SEQ
+            print(f"重传第{next_frame_to_send}帧")
             if (next_frame_to_send < MAX_SEQ):
                 next_frame_to_send += 1
             else:
