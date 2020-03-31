@@ -200,7 +200,7 @@ while 1:
 
         while(between(ack_expend,s.ack,next_frame_to_send)):
             nbuffered -= 1
-            # todo stop_time
+            # done stop_time
             print(f"确认第{ack_expend}帧已送达")
 
             # 按照顺序送达，所以根据有序性，直接按照顺序pop
