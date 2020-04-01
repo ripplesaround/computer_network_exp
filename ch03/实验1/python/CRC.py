@@ -12,6 +12,7 @@ class CRC:
     def __init__(self):
         self.InfoString1 = ''
         self.P = 0b10001000000100001
+        # self.P = 0b1101
         self.crc = ''
         self.Plen = len(bin(self.P)[2:])
 
