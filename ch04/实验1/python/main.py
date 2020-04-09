@@ -60,7 +60,7 @@ def packet_callback(win_pcap, param, header, pkt_data):
     # 输出数据包信息：time,src,dst,protocol,length,ttl,df,mf,offset,checksum
     output1 = {'time':time.strftime('%Y-%m-%d %H:%M:%S',(time.localtime()))}
     output2 = {'src':'%d.%d.%d.%d'%tuple(packet.src) , 'dst':'%d.%d.%d.%d'%tuple(packet.dst)}
-    # 协议17：UDP，4：特殊IP报，41：IPv6
+    # 协议17：UDP，4：特殊IP报，41：IPv6，6:tcp
     output3 = {'protocol':packet.p, 'ttl':packet.ttl}
     # 注意flag只有两位有意义，mf和df mf：还有分片，df不能分片
     output4 = {'df':df, 'mf':mf, 'offset':offset, 'checksum':packet.sum}
@@ -79,7 +79,44 @@ def packet_callback(win_pcap, param, header, pkt_data):
     print(output3)
     print(output2)
 
-    print("----------IP packet---------")
+
+    if packet.p == 17:
+        print("this packet is an UDP packet")
+        print("---------UDP packet---------")
+
+    elif packet.p == 6:
+        print("this packet is a TCP packet")
+        print("---------TCP packet---------")
+        tcp = packet.data
+        output1 = {"The source port":tcp.sport,"The destination port":tcp.dport}
+        output2 = {"序号":tcp.seq}
+        output3 = {"确认号":tcp.ack}
+        output4 = {"数据偏移":tcp.off}
+        output5 = {"检验和":tcp.sum}
+        fin_flag = (tcp.flags & dpkt.tcp.TH_FIN)
+        syn_flag = (tcp.flags & dpkt.tcp.TH_SYN)
+        rst_flag = (tcp.flags & dpkt.tcp.TH_RST)
+        psh_flag = (tcp.flags & dpkt.tcp.TH_PUSH)
+        ack_flag = (tcp.flags & dpkt.tcp.TH_ACK)
+        urg_flag = (tcp.flags & dpkt.tcp.TH_URG)
+        ece_flag = (tcp.flags & dpkt.tcp.TH_ECE)
+        cwr_flag = (tcp.flags & dpkt.tcp.TH_CWR)
+        output6 = {"fin_flag":fin_flag,
+                   "syn_flag":syn_flag,
+                   "rst_flag":rst_flag,
+                   "psh_flag":psh_flag,
+                   "ack_flag":ack_flag,
+                   "urg_flag":urg_flag,
+                   "ece_flag":ece_flag,
+                   "cwr_flag":cwr_flag
+                   }
+
+        print(output1)
+        print(output2)
+        print(output3)
+        print(output4)
+        print(output5)
+        print(output6)
 
 
     print("----------------------------\n")
