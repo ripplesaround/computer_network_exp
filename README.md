@@ -1,5 +1,5 @@
 # computer_network_exp
-大三下计算机网络实验的python程序
+BIT大三下计算机网络编程实验，仅供学习参考
 
 ## 任务
 #### 第二章
