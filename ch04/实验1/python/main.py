@@ -1,6 +1,13 @@
+# coding=utf-8
+
 '''
-dkpt的文档：http://www.commercialventvac.com/dpkt.html
+Author: ripples
+Email: ripplesaround@sina.com
+
+date: 2020/4/9 14:17
+desc: dkpt的文档：http://www.commercialventvac.com/dpkt.html
 '''
+
 
 from winpcapy import WinPcapDevices
 from winpcapy import WinPcapUtils
