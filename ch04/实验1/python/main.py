@@ -133,8 +133,6 @@ def packet_callback(win_pcap, param, header, pkt_data):
         except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
             print("nothing")
 
-
-
     print("----------------------------\n")
 
 for i,key in enumerate(list_device.keys()):
