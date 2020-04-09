@@ -81,18 +81,26 @@ def packet_callback(win_pcap, param, header, pkt_data):
 
 
     if packet.p == 17:
-        print("this packet is an UDP packet")
-        print("---------UDP packet---------")
+        if(len(packet.data)>0):
+            print("this packet is an UDP packet")
+            print("---------UDP packet---------")
+            udp = packet.data
+            output1 = {"The source port":udp.sport,"The destination port":udp.dport}
+            output2 = {"length": udp.ulen}
+            output3 = {"checksum":udp.sum}
+            print(output1)
+            print(output2)
+            print(output3)
 
     elif packet.p == 6:
         print("this packet is a TCP packet")
         print("---------TCP packet---------")
         tcp = packet.data
         output1 = {"The source port":tcp.sport,"The destination port":tcp.dport}
-        output2 = {"序号":tcp.seq}
-        output3 = {"确认号":tcp.ack}
-        output4 = {"数据偏移":tcp.off}
-        output5 = {"检验和":tcp.sum}
+        output2 = {"seq":tcp.seq}
+        output3 = {"ack_seq":tcp.ack}
+        output4 = {"offset":tcp.off}
+        output5 = {"checksum":tcp.sum}
         fin_flag = (tcp.flags & dpkt.tcp.TH_FIN)
         syn_flag = (tcp.flags & dpkt.tcp.TH_SYN)
         rst_flag = (tcp.flags & dpkt.tcp.TH_RST)
@@ -117,6 +125,14 @@ def packet_callback(win_pcap, param, header, pkt_data):
         print(output4)
         print(output5)
         print(output6)
+
+        print("---------HTTP packet--------")
+        try:
+            http_req = dpkt.http.Request(tcp.data)
+            print('HTTP request: %s\n' % repr(http_req))
+        except (dpkt.dpkt.NeedData, dpkt.dpkt.UnpackError):
+            print("nothing")
+
 
 
     print("----------------------------\n")
