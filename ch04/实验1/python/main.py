@@ -19,8 +19,9 @@ import datetime
 print("---------------------------------")
 print("当前的网络配置器列表")
 list_device = WinPcapDevices.list_devices()
-for i,device in enumerate(list_device):
-    print(i,device)
+with WinPcapDevices() as devices:
+    for i,device in enumerate(devices):
+        print(i,device.name, device.description)
 
 
 print("---------------------------------")
@@ -43,6 +44,7 @@ def packet_callback(win_pcap, param, header, pkt_data):
     print("---------分析数据包----------")
 
     print("------ethernet packet-------")
+    # print(pkt_data)
     eth = dpkt.ethernet.Ethernet(pkt_data)
     print("the source address of the ethernet packet:",mac_addr(eth.src))
     print("the destination address of the ethernet packet:", mac_addr(eth.dst))
