@@ -69,7 +69,7 @@ def dict2frame(d):
 
 def send():
     s = frame(test.send_cal(buffer[next_frame_to_send]),next_frame_to_send,(frame_expected+MAX_SEQ)%(MAX_SEQ+1))
-    模拟传输丢失
+    #模拟传输丢失
     if np.random.randint(0, FilterLost) > 0:
         host.sendto(json.dumps(obj=s.__dict__, ensure_ascii=False).encode('utf-8'), ('127.0.0.1', tarPort))
     else:
