@@ -58,8 +58,8 @@ for i,item in enumerate(distance):
     item = item.split(' ')
     router_table[i].next_hop = item[1]
     item = item[0].split('/')
-    router_table[i].ip = str2bit(item[0])
-    router_table[i].subnet_mask = int2bit(item[1])
+    router_table[i].ip = str2bit(item[0]).encode('utf-8')
+    router_table[i].subnet_mask = int2bit(item[1]).encode('utf-8')
 
 print("-------------------------------")
 print("当前路由表：")
@@ -74,7 +74,7 @@ temp = bin(int(router_table[0].ip,2) & int(router_table[0].subnet_mask,2))
 temp = []
 
 for i in range(table_len):
-    dst_subnet =  bin(int(str2bit(dst_ip),2) & int(router_table[i].subnet_mask,2))[2:]
+    dst_subnet =  bin(int(str2bit(dst_ip),2) & int(router_table[i].subnet_mask,2))[2:].encode('utf-8')
     if dst_subnet == router_table[i].ip:
         # print("%-10s%-30s"%("next hop",router_table[i].next_hop))
         temp.append(i)
