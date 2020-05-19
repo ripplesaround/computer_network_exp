@@ -1,19 +1,20 @@
 import numpy as np
 
 def conv(ch):
-    if ch == 'A':
+    if ch == 'A' or ch =='a':
         return 10
-    elif ch == 'B':
+    elif ch == 'B' or ch =='b':
         return 11
-    elif ch == 'C':
+    elif ch == 'C' or ch =='c':
         return 12
-    elif ch =='D':
+    elif ch =='D' or ch =='d':
         return 13
-    elif ch == 'E':
+    elif ch == 'E' or ch =='e':
         return 14
-    elif ch == 'F':
+    elif ch == 'F' or ch =='f':
         return 15
     else:
+        # print(int(ch))
         return int(ch)
 
 with open('C:\\Users\\Dell\\Desktop\\IPHeader.txt',"r") as f:    #设置文件对象
@@ -26,6 +27,7 @@ with open('C:\\Users\\Dell\\Desktop\\IPHeader.txt',"r") as f:    #设置文件�
     for i in range(start,end):
         ch = conv(str[i])
         total = pow(16,end-i-1)*ch + total
+        # print("total:{}".format(int('4')))
     # print("版本字段十六进制：{}".format(str[start:end]))
     print("版本字段十进制：{}".format(total))
 
@@ -141,6 +143,12 @@ with open('C:\\Users\\Dell\\Desktop\\IPHeader.txt',"r") as f:    #设置文件�
     for i in range(0,10):
         for j in range(0,4):
             total = total + pow(16,3-j)*conv(str[4*i+j])
-    # print(total%(pow(16,4)))
-    # print(pow(16,4))
-    print("计算得到首部校验码为：{}".format(bin(2**8+total)))
+    left = total - (total%(16**4))
+    right = total%(16**4)
+    print(16**4)
+    left = int(left/pow(16,4))
+    print(right)
+    print(left)
+    x = right +left
+    print(type(bin(x)))
+    print('转换为二进制数的补码为：',bin(2**16+(x)))
