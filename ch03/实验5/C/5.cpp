@@ -2,7 +2,7 @@
 #include<string>
 #include<stdlib.h>
 using namespace std;
-#define shift(x, n) (((x) << (n)) | ((x) >> (32-(n))))//ÓÒÒÆµÄÊ±ºò£¬¸ßÎ»Ò»¶¨Òª²¹Áã£¬¶ø²»ÊÇ²¹³ä·ûºÅÎ»
+#define shift(x, n) (((x) << (n)) | ((x) >> (32-(n))))//å³ç§»çš„æ—¶å€™ï¼Œé«˜ä½ä¸€å®šè¦è¡¥é›¶ï¼Œè€Œä¸æ˜¯è¡¥å……ç¬¦å·ä½
 #define F(x, y, z) (((x) & (y)) | ((~x) & (z)))    
 #define G(x, y, z) (((x) & (z)) | ((y) & (~z)))
 #define H(x, y, z) ((x) ^ (y) ^ (z))
@@ -11,14 +11,14 @@ using namespace std;
 #define B 0xefcdab89
 #define C 0x98badcfe
 #define D 0x10325476
-//strBayeµÄ³¤¶È
+//strBayeçš„é•¿åº¦
 unsigned int strlength;
-//A,B,C,DµÄÁÙÊ±±äÁ¿
+//A,B,C,Dçš„ä¸´æ—¶å˜é‡
 unsigned int atemp;
 unsigned int btemp;
 unsigned int ctemp;
 unsigned int dtemp;
-//³£Á¿ti unsigned int(abs(sin(i+1))*(2pow32))
+//å¸¸é‡ti unsigned int(abs(sin(i+1))*(2pow32))
 const unsigned int k[]={
         0xd76aa478,0xe8c7b756,0x242070db,0xc1bdceee,
         0xf57c0faf,0x4787c62a,0xa8304613,0xfd469501,0x698098d8,
@@ -33,7 +33,7 @@ const unsigned int k[]={
         0x432aff97,0xab9423a7,0xfc93a039,0x655b59c3,0x8f0ccc92,
         0xffeff47d,0x85845dd1,0x6fa87e4f,0xfe2ce6e0,0xa3014314,
         0x4e0811a1,0xf7537e82,0xbd3af235,0x2ad7d2bb,0xeb86d391};
-//Ïò×óÎ»ÒÆÊı
+//å‘å·¦ä½ç§»æ•°
 const unsigned int s[]={7,12,17,22,7,12,17,22,7,12,17,22,7,
         12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
         4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,
@@ -74,25 +74,25 @@ void mainLoop(unsigned int M[])
     dtemp=d+dtemp;
 }
 /*
-*Ìî³äº¯Êı
-*´¦ÀíºóÓ¦Âú×ãbits¡Ô448(mod512),×Ö½Ú¾ÍÊÇbytes¡Ô56£¨mode64)
-*Ìî³ä·½Ê½ÎªÏÈ¼ÓÒ»¸ö1,ÆäËüÎ»²¹Áã
-*×îºó¼ÓÉÏ64Î»µÄÔ­À´³¤¶È
+*å¡«å……å‡½æ•°
+*å¤„ç†ååº”æ»¡è¶³bitsâ‰¡448(mod512),å­—èŠ‚å°±æ˜¯bytesâ‰¡56ï¼ˆmode64)
+*å¡«å……æ–¹å¼ä¸ºå…ˆåŠ ä¸€ä¸ª1,å…¶å®ƒä½è¡¥é›¶
+*æœ€ååŠ ä¸Š64ä½çš„åŸæ¥é•¿åº¦
 */
 unsigned int* add(string str)
 {
-    unsigned int num=((str.length()+8)/64)+1;//ÒÔ512Î»,64¸ö×Ö½ÚÎªÒ»×é
-    unsigned int *strByte=new unsigned int[num*16];    //64/4=16,ËùÒÔÓĞ16¸öÕûÊı
+    unsigned int num=((str.length()+8)/64)+1;//ä»¥512ä½,64ä¸ªå­—èŠ‚ä¸ºä¸€ç»„
+    unsigned int *strByte=new unsigned int[num*16];    //64/4=16,æ‰€ä»¥æœ‰16ä¸ªæ•´æ•°
     strlength=num*16;
     for (unsigned int i = 0; i < num*16; i++)
         strByte[i]=0;
     for (unsigned int i=0; i <str.length(); i++)
     {
-        strByte[i>>2]|=(str[i])<<((i%4)*8);//Ò»¸öÕûÊı´æ´¢ËÄ¸ö×Ö½Ú£¬i>>2±íÊ¾i/4 Ò»¸öunsigned int¶ÔÓ¦4¸ö×Ö½Ú£¬±£´æ4¸ö×Ö·ûĞÅÏ¢
+        strByte[i>>2]|=(str[i])<<((i%4)*8);//ä¸€ä¸ªæ•´æ•°å­˜å‚¨å››ä¸ªå­—èŠ‚ï¼Œi>>2è¡¨ç¤ºi/4 ä¸€ä¸ªunsigned intå¯¹åº”4ä¸ªå­—èŠ‚ï¼Œä¿å­˜4ä¸ªå­—ç¬¦ä¿¡æ¯
     }
-    strByte[str.length()>>2]|=0x80<<(((str.length()%4))*8);//Î²²¿Ìí¼Ó1 Ò»¸öunsigned int±£´æ4¸ö×Ö·ûĞÅÏ¢,ËùÒÔÓÃ128×óÒÆ
+    strByte[str.length()>>2]|=0x80<<(((str.length()%4))*8);//å°¾éƒ¨æ·»åŠ 1 ä¸€ä¸ªunsigned intä¿å­˜4ä¸ªå­—ç¬¦ä¿¡æ¯,æ‰€ä»¥ç”¨128å·¦ç§»
     /*
-    *Ìí¼ÓÔ­³¤¶È£¬³¤¶ÈÖ¸Î»µÄ³¤¶È£¬ËùÒÔÒª³Ë8£¬È»ºóÊÇĞ¡¶ËĞò£¬ËùÒÔ·ÅÔÚµ¹ÊıµÚ¶ş¸ö,ÕâÀï³¤¶ÈÖ»ÓÃÁË32Î»
+    *æ·»åŠ åŸé•¿åº¦ï¼Œé•¿åº¦æŒ‡ä½çš„é•¿åº¦ï¼Œæ‰€ä»¥è¦ä¹˜8ï¼Œç„¶åæ˜¯å°ç«¯åºï¼Œæ‰€ä»¥æ”¾åœ¨å€’æ•°ç¬¬äºŒä¸ª,è¿™é‡Œé•¿åº¦åªç”¨äº†32ä½
     */
     strByte[num*16-2]=str.length()*8;
     return strByte;
@@ -105,7 +105,7 @@ string changeHex(int a)
     for(int i=0;i<4;i++)
     {
         str1="";
-        b=((a>>i*8)%(1<<8))&0xff;   //ÄæĞò´¦ÀíÃ¿¸ö×Ö½Ú
+        b=((a>>i*8)%(1<<8))&0xff;   //é€†åºå¤„ç†æ¯ä¸ªå­—èŠ‚
         for (int j = 0; j < 2; j++)
         {
             str1.insert(0,1,str16[b%16]);
@@ -117,7 +117,7 @@ string changeHex(int a)
 }
 string getMD5(string source)
 {
-    atemp=A;    //³õÊ¼»¯
+    atemp=A;    //åˆå§‹åŒ–
     btemp=B;
     ctemp=C;
     dtemp=D;
@@ -154,13 +154,13 @@ string getMD5(string source)
 	for(int ii=t.size()-1,jj=0;ii>=0;ii--,jj++){
 		ttt[ii]=t[jj];
 	}
-//	cout<<"ttt£º"<<ttt<<endl;
+//	cout<<"tttï¼š"<<ttt<<endl;
 	cc.append(ttt);
 	cc.append(KL);
     string ans=getMD5(cc);
-    cout<<"¿ÚÁî£º"<<KL<<endl;
-    cout<<"Ëæ»úÊı£º"<<temp[i]<<endl;
-    cout<<"MD5Öµ£º"<<ans<<endl;
+    cout<<"å£ä»¤ï¼š"<<KL<<endl;
+    cout<<"éšæœºæ•°ï¼š"<<temp[i]<<endl;
+    cout<<"MD5å€¼ï¼š"<<ans<<endl;
 	
 	}
     
