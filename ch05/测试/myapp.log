@@ -1,0 +1,5 @@
+Sun, 24 May 2020 22:28:22 test.py[line:15] DEBUG This is debug message
+Sun, 24 May 2020 22:28:22 test.py[line:16] INFO This is info message
+Sun, 24 May 2020 22:28:22 test.py[line:17] WARNING This is warning message
+Sun, 24 May 2020 22:28:22 test.py[line:19] INFO 当前机器上有以下网卡
+Sun, 24 May 2020 22:28:22 test.py[line:20] INFO {'\\Device\\NPF_{AC6EF18C-AF7F-4E6D-9CE9-1053FD8E68E4}': 'VMware Virtual Ethernet Adapter', '\\Device\\NPF_{9FBF3E34-DD26-4ABC-9B6A-912AA48A5CAE}': 'Microsoft', '\\Device\\NPF_{E034ABC5-2630-4258-A938-A866640CCE7E}': 'Oracle', '\\Device\\NPF_{67DF0C7C-8DD8-4840-97AA-9567879EC801}': 'VMware Virtual Ethernet Adapter', '\\Device\\NPF_{586F0ED7-3FD6-4691-B1F9-4427C07FE238}': 'Microsoft', '\\Device\\NPF_{FEE963E5-5280-45FA-82B8-100B9CE8DE8B}': 'TAP-Windows Adapter V9', '\\Device\\NPF_{BEAC3569-2549-4DB8-8FC5-D34E8A26A4DA}': 'Microsoft'}

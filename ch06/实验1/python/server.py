@@ -17,7 +17,7 @@ print("  程序开始执行")
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 UDPPort=8888
-server.bind(('192.168.1.106',UDPPort))
+server.bind(('192.168.1.105',UDPPort))
 
 client_table = []
 def connect_build():
