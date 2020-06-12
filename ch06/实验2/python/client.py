@@ -13,7 +13,7 @@ import sys
 import time
 import _thread
 import threading
-client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 selfport = 0
 
 def connect_build():

@@ -12,7 +12,7 @@ import socket
 import time
 import numpy as np
 print("  程序开始执行")
-server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 UDPPort=8888
 # 每次IP都需要更改，或者搞一个获得当前IP的方法，但是还是需要传递给clinet

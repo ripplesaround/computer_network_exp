@@ -1,0 +1,28 @@
+# Project: trace
+# Makefile created by Dev-C++ 5.11
+
+CPP      = g++.exe
+CC       = gcc.exe
+WINDRES  = windres.exe
+OBJ      = traceroute.o
+LINKOBJ  = traceroute.o
+LIBS     = -L"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32" -L"C:/WpdPack/Lib" -L"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/lib" -L"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc "../../../BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32/libws2_32.a" "../../../BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib32/libwsock32.a" -m32
+INCS     = -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/include" -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/WpdPack/Include"
+CXXINCS  = -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/include" -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"D:/BIT/计算机科学与程序设计/Dev C++/install3/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++" -I"C:/WpdPack/Include"
+BIN      = trace.exe
+CXXFLAGS = $(CXXINCS) -m32
+CFLAGS   = $(INCS) -m32
+RM       = rm.exe -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before $(BIN) all-after
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o $(BIN) $(LIBS)
+
+traceroute.o: traceroute.cpp
+	$(CPP) -c traceroute.cpp -o traceroute.o $(CXXFLAGS)
