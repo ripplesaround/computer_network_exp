@@ -23,7 +23,7 @@ FilterLost=10
 
 client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-f = open('config.txt', 'r')
+f = open('python/config.txt', 'r')  # 注意调整路径
 messages = f.read().split('\n')
 messages = [message for message in messages if message != '']
 test = CRC()

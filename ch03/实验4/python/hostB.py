@@ -10,7 +10,7 @@ desc:
 import socket
 import sys
 # 调用实验1 中的CRC
-sys.path.append('../../实验1/python')
+sys.path.append('../实验1/python')
 from CRC import *
 import time
 import _thread
@@ -33,7 +33,7 @@ MAX_SEQ = 7
 Len = 3 # ack,seq编码长度 [log7+1]
 test = CRC()
 
-f = open('config.txt', 'r')
+f = open('python/config.txt', 'r')
 messages = f.read().split('\n')
 messages = [message for message in messages if message != '']
 
