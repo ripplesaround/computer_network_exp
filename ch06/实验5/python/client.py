@@ -12,7 +12,7 @@ import socket
 HOST='192.168.1.101'
 PORT=50007
 s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)      #定义socket类型，网络通信，TCP
-i=s.connect(HOST,PORT)
+i=s.connect((HOST,PORT))
 if i==-1:               #要连接的IP与端口
     print("连接失败")
 else:
