@@ -11,20 +11,28 @@ desc: 注意这里实际上是实现了PPT ch06-1 p31 的框图，只是把实�
 '''
 
 import socket
+import datetime
 import time
 import numpy as np
 import impacket.ImpactPacket
 import warnings
-warnings.filterwarnings("ignore")
+
 print("  程序开始执行")
-s = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_RAW)
 
-ip = impacket.ImpactPacket.IP()
-tcp = impacket.ImpactPacket.TCP()
+HOST='192.168.1.101'
+PORT=50007
 
-rec = s.recvfrom(1024)
-print(rec[0])
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.bind((HOST,PORT))
+s.listen(1)
 
-
+while True:
+    conn,addr=s.accept()
+    print('Client %s connected!'%str(addr))
+    message = conn.recv(1024)
+    message = message.decode("utf-8").upper()
+    conn.send(message.encode("utf-8"))
+    print("Sent:",message)
+    conn.close()
 print("----------------------------------------")
 print("程序结束")
