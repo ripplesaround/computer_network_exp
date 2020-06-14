@@ -49,7 +49,7 @@ void send(pcap_t* adhandle) {
     memcpy(ah.smac, mac, 6);   //ARP字段源MAC地址
     memset(ah.dmac, 0xff, 6);   //ARP字段目的MAC地址
     memcpy(ah.sip, ip, 4);   //ARP字段源IP地址
-    memcpy(ah.dip, ip_dist, 4);   //ARP字段源IP地址
+    memcpy(ah.dip, ip_dist, 4);   //ARP字段目的IP地址
     //memset(ah.dip, 0x05, 4);   //ARP字段目的IP地址
     eh.EthType = htons(ETH_ARP);   //htons：将主机的无符号短整形数转换成网络字节顺序
     ah.hdtype = htons(ARP_HARDWARE);
