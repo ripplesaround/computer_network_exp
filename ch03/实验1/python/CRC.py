@@ -15,7 +15,6 @@ class CRC:
         # self.P = 0b1101
         self.crc = ''
         self.Plen = len(bin(self.P)[2:])
-
     def cal(self,temp_str):
         len_infostr_orgin = len(temp_str) - self.Plen + 1
         temp = temp_str[0:0+self.Plen]
@@ -28,7 +27,6 @@ class CRC:
             if i< len_infostr_orgin-1:
                 temp = bin(r)[2:] + temp_str[self.Plen+i]
         return r
-
     def send_cal(self,temp = None):
         if temp!=None:
             self.InfoString1 = temp
@@ -43,7 +41,6 @@ class CRC:
             temp_str += '0'
             self.crc = '0'+self.crc
         return temp_str + bin(r)[2:]
-
     def rec_cal(self,temp):
         # temp = self.send_cal()
         r = self.cal(temp)
@@ -52,8 +49,6 @@ class CRC:
         else:
             print("余数不为0")
             return 'error'
-
-
     def rec_cal_show(self,i,messages):
         # temp = self.send_cal()
         temp = messages[i*3+2][-32:] + self.crc
@@ -65,7 +60,6 @@ class CRC:
             print("本次传输没有错误")
         else:
             print("本次实验出现错误！")
-
     def show(self,messages):
         K = len(messages)//3
         for i in range(K):
@@ -75,5 +69,5 @@ class CRC:
             print("发送数据为\t\t\t\t\t",self.InfoString1)
             print('CRC为\t\t\t\t\t\t',bin(self.P)[2:])
             print("带校验和的发送帧为\t\t\t",self.send_cal())
-            print("发送端循环冗余校验码为\t\t", self.crc)
-
+            print("发送端循环冗余校验码为\t\t\t", self.crc)
+            self.rec_cal_show(i,messages)

@@ -16,5 +16,5 @@ f = open('../config.txt', 'r')
 messages = f.read().split('\n')
 messages = [message for message in messages if message != '']
 test = CRC()
-# test.show(messages)
-print(test.send_cal('100100'))
+test.show(messages)
+# print(test.send_cal('100100'))
