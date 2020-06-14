@@ -17,27 +17,21 @@ import impacket.ImpactPacket
 import warnings
 warnings.filterwarnings("ignore")
 print("  程序开始执行")
-s = socket.socket(socket.AF_INET,socket.SOCK_RAW,socket.IPPROTO_RAW)
 
-ip = impacket.ImpactPacket.IP()
-tcp = impacket.ImpactPacket.TCP()
 
-ip.set_ip_src("192.168.1.101")#你的ip
-ip.set_ip_dst("192.168.1.100")#目标ip
-ip.set_ip_ttl(255)#ttl
+HOST = input("ip地址>>> ")
+PORT = int(input("端口号>>> "))
+# HOST='192.168.1.101'
+# PORT= 50007
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.connect((HOST,PORT))
 
-tcp.set_th_flags(0b00000010)#将syn标志位设为1
-tcp.set_th_sport(12228)#源端口
-tcp.set_th_dport(80)#目标端口
-tcp.set_th_ack(0)
-tcp.set_th_seq(22903)
-tcp.set_th_win(20000)#设置Window Size
-temp = "hellp"
-tcp.set_bytes_from_string(temp)
-
-ip.contains(tcp)
-ip.calculate_checksum()
-s.sendto(ip.get_packet(),("192.168.1.100",80))#两个参数分别为要发送的数据，类型为bytes与包含目标ip与端口的元祖
+data = input("输入字符串>>> ")
+print("Connect %s:%d ok"%(HOST,PORT))
+s.send(data.encode("utf-8"))
+data=s.recv(1024)
+print("Received:",data.decode("utf-8"))
+s.close()
 
 print("----------------------------------------")
 print("程序结束")
