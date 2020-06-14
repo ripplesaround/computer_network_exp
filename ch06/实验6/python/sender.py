@@ -39,7 +39,7 @@ def rec_from_server(n):
 
 
 class TCP_congestion_control():
-    # 采用加性增长，而不是翻倍增长，参考PPT ch06 p94
+    # 采用加性增长，而不是翻倍增长，参考PPT ch06-2 p94
     def __init__(self,MSS= 1024,
                  Threshold = 32768,
                  TriACKRound = 16,
@@ -86,7 +86,7 @@ class TCP_congestion_control():
         plt.xlabel("conut")
         plt.ylabel("CongWin")
         plt.plot(self.X,self.Y)
-        # plt.show()
+        plt.show()
 
     def action(self):
         if self.event == "ACK":
