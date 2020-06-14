@@ -14,29 +14,21 @@ import socket
 import time
 import numpy as np
 print("  程序开始执行")
-server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-UDPPort=8888
-server.bind(('192.168.1.105',UDPPort))
-
-client_table = []
-def connect_build():
-    from_client = server.recvfrom(1024)
-    print(f"来自{from_client[1]}的消息：{from_client[0].decode('utf-8')}，连接已建立")
-    server.sendto(str(from_client[1][1]).encode('utf-8'),from_client[1])
-    client_table.append(from_client[1])
-
-print("----------------------------------------")
-while 1:
-    # connect_build()
-    re = server.recvfrom(1024)
-    if re[0].decode('utf-8') == "stop":
-        break
-    print(f"来自{re[1]}的消息:{re[0].decode('utf-8')}")
-    temp = re[0].decode('utf-8').upper()
-    server.sendto(temp.encode('utf-8'), re[1])
-    # client_table.clear()
-    print("----------------------------------------")
+#创建socket
+skt = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+#绑定地址和端口
+skt.bind(('192.168.1.101',50007))
+#循环
+while True:
+    #调用接受消息
+    data,addr = skt.recvfrom(1024)
+    #接受成功回复消息
+    rst = data.decode("utf-8").upper().encode("utf-8")
+    skt.sendto(rst,addr)
+    print('server Done')
+#关闭链接
+skt.close()
 
 print("----------------------------------------")
 print("程序结束")
